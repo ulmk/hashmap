@@ -45,6 +45,18 @@ func (m *atomicMapBuffer) store(key string, value interface{}) {
 	}
 }
 
+func (m *atomicMapBuffer) store2(key string, value interface{}) {
+	for {
+		oldBuffer := (*[]keyValue)(atomic.LoadPointer(&m.buffer))
+		newBuffer := make([]keyValue, len(*oldBuffer)+1)
+		copy(newBuffer, *oldBuffer)
+		newBuffer[len(*oldBuffer)] = keyValue{key: key, value: value}
+
+		atomic.StorePointer(&m.buffer, unsafe.Pointer(&newBuffer))
+		return
+	}
+}
+
 func main() {
 	// fmt.Println("Hash map ...")
 	// hash := uint64(10)
