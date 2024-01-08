@@ -1,2 +1,2 @@
 # hashmap
-hash map implementation
+hash map implementation with inner magic
